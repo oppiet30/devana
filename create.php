@@ -1,26 +1,32 @@
-<?php include "antet.php"; include "func.php";
+<?php
+include "antet.php";
+include "func.php";
 
 if (isset($_SESSION["user"][0]))
 {
- $land=get_land();
- $xy=$land[rand(0, count($land)-1)];
- $towns=towns($_SESSION["user"][0]);
- if (count($towns))
- {
-  $is_cap=0; $data=explode("-", $towns[0][8]); $army=explode("-", $towns[0][7]);
-  if ($data[7]<10) msg($lang['needCastle']);
-  if ($army[11]<10) msg($lang['needColonists']);
- }
- else $is_cap=1;
+	$land=get_land();
+	$xy=$land[rand(0, count($land)-1)];
+	$towns=towns($_SESSION["user"][0]);
+	if (count($towns))
+	{
+		$is_cap=0; $data=explode("-", $towns[0][8]); $army=explode("-", $towns[0][7]);
+		if ($data[7]<10) msg($lang['needCastle']);
+			if ($army[11]<10)
+				msg($lang['needColonists']);
+	}
+	else
+		$is_cap=1;
 }
-else {header('Location: login.php'); die();}
+else
+{
+	header('Location: login.php'); die();
+}
 ?>
 <html>
-<?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
-<script src="func.js" type="text/javascript"></script>
-
 <head>
-<title><?php echo $title; ?> - <?php echo $lang['createTown'] ?></title>
+	<title><?php echo $title; ?> - <?php echo $lang['createTown'] ?></title>
+	<?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
+	<script src="func.js" type="text/javascript"></script>
 </head>
 
 <body class="q_body">
