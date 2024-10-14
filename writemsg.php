@@ -1,12 +1,17 @@
-<?php include "antet.php"; include "func.php";
+<?php
+include "antet.php";
+include "func.php";
 
-if (!isset($_SESSION["user"][0])) {header('Location: login.php'); die();}
+if (!isset($_SESSION["user"][0]))
+{
+	header('Location: login.php');
+	die();
+}
 ?>
 <html>
-<?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
-
 <head>
 <title><?php echo $title; ?> - <?php echo $lang['writeMsg'] ?></title>
+<?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
 </head>
 
 <body class="q_body">

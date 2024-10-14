@@ -1,15 +1,15 @@
-<?php include "antet.php"; include "func.php";
+<?php 
+include "antet.php";
+include "func.php";
+
 $gen_stats=gen_stats(48);
 ?>
 <html>
-<?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
-
 <head>
 <title><?php echo $title; ?> - <?php echo $lang['home'] ?></title>
+<?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
 </head>
-
 <body class="q_body">
-
 <div align="center">
 <?php echo $top_ad; ?>
     <table class="q_table">
@@ -41,5 +41,4 @@ $gen_stats=gen_stats(48);
 <p><?php about(); ?></div>
 
 </body>
-
 </html>
