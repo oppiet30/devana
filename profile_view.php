@@ -1,22 +1,41 @@
-<?php include "antet.php"; include "func.php";
+<?php
+include_once "antet.php";
+include_once "func.php";
 
 if (isset($_GET["id"]))
 {
- $_GET["id"]=clean($_GET["id"]);
- $_GET["id"]=clean($_GET["id"]);
- check_d($_GET["id"]);
- $del=get_d($_GET["id"]);
- $usr=user($_GET["id"]);
- if (isset($usr[10])) $faction=faction($usr[10]); else $faction=array(0, 0, 0, 0);
- $towns=towns($_GET["id"]);
- if ($usr[11]) $alliance=alliance($usr[11]);
- $twnCount=count($towns); $population=0; $capital=array();
- for ($i=0; $i<$twnCount; $i++)
- {
-  if ($towns[$i][4]) $capital=town_xy($towns[$i][0]);
-  $population+=$towns[$i][3];
- }
-} else header('Location: index.php');
+	$_GET["id"]=clean($_GET["id"]);
+	$_GET["id"]=clean($_GET["id"]);
+	check_d($_GET["id"]);
+	$del=get_d($_GET["id"]);
+	$usr=user($_GET["id"]);
+	if (isset($usr[10]))
+	{
+		$faction=faction($usr[10]);
+	}
+	else
+	{
+		$faction=array(0, 0, 0, 0);
+	}
+	$towns=towns($_GET["id"]);
+	if ($usr[11])
+	{
+		$alliance=alliance($usr[11]);
+	}
+	$twnCount=count($towns); $population=0; $capital=array();
+	for ($i=0; $i<$twnCount; $i++)
+	{
+		if ($towns[$i][4])
+		{
+			$capital=town_xy($towns[$i][0]);
+		}
+		$population+=$towns[$i][3];
+	}
+}
+else
+{
+	header('Location: index.php');
+}
 ?>
 <html>
 <?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
