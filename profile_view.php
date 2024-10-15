@@ -37,7 +37,8 @@ else
 	header('Location: index.php');
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en_US">
 <?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
 <script src="func.js" type="text/javascript"></script>
 
