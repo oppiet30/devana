@@ -439,7 +439,7 @@ $lang['currentStorCap'] = "Current storage capacity";
 $lang['weapStock'] = "Weapons in stock";
 $lang['availableTroops'] = "AvailableTroops";
 $lang['upgrade'] = "Upgrade";
-$lang['toLevel'] = "toLevel";
+$lang['toLevel'] = "to Level";
 $lang['noHouses'] = "Not enough houses";
 $lang['expSpeed'] = "Expected speed percentage";
 $lang['noResources'] = "Not enough resources";
@@ -701,4 +701,8 @@ $lang['content'] = "content";
 $lang['notMember'] = "You are not a member.";
 $lang['opCompleted'] = "Operation completed successfully.";
 $lang['by'] = "by";
+$lang['North'] = "North";
+$lang['East'] = "East";
+$lang['South'] = "South";
+$lang['West'] = "West";
 ?>
