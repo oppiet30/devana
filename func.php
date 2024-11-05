@@ -1,8 +1,6 @@
 <?php
-$db_id = mysqli_connect($db_host, $db_user, $db_pass)
+$db_id = mysqli_connect($db_host, $db_user, $db_pass, $db_namr)
     or die("Could not connect to DB.");
-mysqli_select_db($db_name, $db_id)
-    or die("Database not found.");
 //time difference; gets for how much the mysql server time is ahead, compared to the http server time;
 $query = "SELECT timediff(now(), '" . date("Y-m-d H:i:s") . "')";
 $result = mysqli_query($db_id, $query);
@@ -35,10 +33,11 @@ function label($msg)
 
 function clean($str)
 {
+    global $db_id;
     if (is_numeric($str)) $str = floor($str);
     $cleaned = strip_tags($str);
     $cleaned = htmlspecialchars($cleaned);
-    $cleaned = mysqli_real_escape_string($cleaned);
+    $cleaned = mysqli_real_escape_string($db_id, $cleaned);
     $to_clean = array("%20", "\"", "'", "\\", "=", ";", ":");
     $cleaned = str_replace($to_clean, "", $cleaned);
     return $cleaned;
@@ -652,7 +651,7 @@ function update_formation($id, $gen)
     $result = mysqli_query($db_id, $query);
 
     if ($result) header("Location: gen.php?town=" . $id);
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function update_town($name, $desc, $id)
@@ -868,7 +867,7 @@ function check_c($id, $faction)
         if ($row[0][0] == "-") {
             if ($row[2] > -1) {
                 $land[$row[1]][$row[2]]++;
-                $ldata = "";
+                $ldata[] = "";
                 for ($i = 0; $i < count($land); $i++) $ldata[$i] = implode("-", $land[$i]);
                 $ldata = implode("/", $ldata);
                 $out = explode("-", $buildings[$row[1]][5]);
@@ -1547,7 +1546,7 @@ function cancel_d($id)
     $query = "delete from d_queue where user=" . $id;
     $result = mysqli_query($db_id, $query);
     if ($result) msg("Delete request withdrawn.");
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function cancel_c($id, $b, $subB, $res, $faction)
@@ -1570,7 +1569,7 @@ function cancel_c($id, $b, $subB, $res, $faction)
     $query = "delete from c_queue where town=" . $id . " and b=" . $b;
     $result = mysqli_query($db_id, $query);
     if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function cancel_a($id, $tid, $army, $gen)
@@ -1583,7 +1582,7 @@ function cancel_a($id, $tid, $army, $gen)
     $query = "delete from a_queue where town=" . $id . " and id=" . $tid;
     $result = mysqli_query($db_id, $query);
     if ($result) header("Location: dispatch.php?town=" . $id);
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function cancel_w($id, $type, $res)
@@ -1595,7 +1594,7 @@ function cancel_w($id, $type, $res)
     $query = "delete from w_queue where town=" . $id . " and type=" . $type;
     $result = mysqli_query($db_id, $query);
     if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function cancel_u($id, $type, $res, $weaps, $q)
@@ -1609,7 +1608,7 @@ function cancel_u($id, $type, $res, $weaps, $q)
     $query = "delete from u_queue where town=" . $id . " and type=" . $type;
     $result = mysqli_query($db_id, $query);
     if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function cancel_uup($id, $unit, $tree, $res)
@@ -1621,7 +1620,7 @@ function cancel_uup($id, $unit, $tree, $res)
     $query = "delete from uup_queue where town=" . $id . " and unit=" . $unit . " and tree=" . $tree;
     $result = mysqli_query($db_id, $query);
     if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function cancel_t($id, $sType, $sSubType, $bType, $bSubType, $res)
@@ -1637,14 +1636,14 @@ function cancel_t($id, $sType, $sSubType, $bType, $bSubType, $res)
     $query = "delete from t_queue where seller=" . $id . " and sType=" . $sType . " and sSubType=" . $sSubType . " and bType=" . $bType . " and bSubType=" . $bSubType;
     $result = mysqli_query($db_id, $query);
     if ($result) header("Location: marketplace.php?town=" . $id);
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function send_report($to, $subject, $contents)
 {
     global $db_id;
 
-    $query = "insert into reports(recipient, subject, contents, sent) values(" . $to . ", '" . mysqli_real_escape_string($subject) . "', '" . mysqli_real_escape_string($contents) . "', now())";
+    $query = "insert into reports(recipient, subject, contents, sent) values(" . $to . ", '" . mysqli_real_escape_string($db_id, $subject) . "', '" . mysqli_real_escape_string($db_id, $contents) . "', now())";
     $result = mysqli_query($db_id, $query);
     if ($result) return 1;
     else return 0;
@@ -1760,7 +1759,7 @@ function message($id)
 
 function delrep($id, $owner)
 {
-    global $db_id;
+    global $db_id, $lang;
     $report = report($id);
 
     if ($owner != $report[1]) {
@@ -1770,7 +1769,7 @@ function delrep($id, $owner)
         $result = mysqli_query($db_id, $query);
         $reports = array();
         if ($result) header('Location: reports.php?page=0');
-        else msg("Failed." . mysqli_error());
+        else msg("Failed." . mysqli_error($db_id));
     }
 }
 
@@ -1782,12 +1781,12 @@ function delallrep($id)
     $result = mysqli_query($db_id, $query);
     $reports = array();
     if ($result) header('Location: reports.php?page=0');
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function delmsg($id, $owner)
 {
-    global $db_id;
+    global $db_id, $lang;
     $message = message($id);
 
     if ($owner != $message[2]) {
@@ -1797,7 +1796,7 @@ function delmsg($id, $owner)
         $result = mysqli_query($db_id, $query);
         $reports = array();
         if ($result) header('Location: messages.php?page=0');
-        else msg("Failed." . mysqli_error());
+        else msg("Failed." . mysqli_error($db_id));
     }
 }
 
@@ -1809,7 +1808,7 @@ function delallmsg($id)
     $result = mysqli_query($db_id, $query);
     $reports = array();
     if ($result) header('Location: messages.php?page=0');
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function delacc($id)
@@ -1825,7 +1824,7 @@ function delacc($id)
         $query = "insert into d_queue(user, dueTime) values('" . $id . "', '" . $date . "')";
         $result = mysqli_query($db_id, $query);
         if ($result) msg("Account will be deleted in 24 hours.");
-        else msg("Failed." . mysqli_error());
+        else msg("Failed." . mysqli_error($db_id));
     } else msg("Account is already scheduled for deletion.");
 }
 
@@ -1860,7 +1859,7 @@ function build($id, $b, $subB, $time, $res, $faction)
     $result = mysqli_query($db_id, $query);
 
     if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function forge($a, $id, $type, $q, $time, $res)
@@ -1883,7 +1882,7 @@ function forge($a, $id, $type, $q, $time, $res)
     $query = "update towns set resources='" . $res . "' where id=" . $id;
     $result = mysqli_query($db_id, $query);
     if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function train($a, $id, $type, $q, $time, $res, $weaps)
@@ -1907,7 +1906,7 @@ function train($a, $id, $type, $q, $time, $res, $weaps)
     $query = "update towns set resources='" . $res . "', weapons='" . $weaps . "', upkeep=" . (array_sum($town[7]) + $q) . " where id=" . $id;
     $result = mysqli_query($db_id, $query);
     if ($result) echo "<script type='text/javascript'>history.go(-1)</script>";
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function set_gen($id, $utype)
@@ -1918,7 +1917,7 @@ function set_gen($id, $utype)
     $query = "update towns set general='1-1-" . $utype . "-0' where id=" . $id;
     $result = mysqli_query($db_id, $query);
     if ($result) msg("Unit promoted to general. You can only have one general. Promoting another unit will demote the current general.");
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function battle($data)
@@ -2186,7 +2185,7 @@ function trade($id, $buyer, $sQ, $sType, $sSubType, $bQ, $bType, $bSubType, $typ
         $query = "update towns set " . $scol . "='" . $res . "' where id=" . $id;
         $result = mysqli_query($db_id, $query);
         if ($result) header("Location: marketplace.php?town=" . $id);
-        else msg("Failed." . mysqli_error());
+        else msg("Failed." . mysqli_error($db_id));
     } else {
         msg("You already have an offer/transport of same type underway.");
     }
@@ -2217,7 +2216,7 @@ function upgrade_u($id, $res, $unit, $tree, $time)
     mysqli_query($db_id, $query);
     $query = "update towns set resources='" . $res . "' where id=" . $id;
     $result = mysqli_query($db_id, $query);
-    if (!$result) msg("Failed." . mysqli_error());
+    if (!$result) msg("Failed." . mysqli_error($db_id));
 }
 
 function dispatch($town, $target, $type, $dueTime, $time, $qarmy, $army, $gen)
@@ -2238,7 +2237,7 @@ function dispatch($town, $target, $type, $dueTime, $time, $qarmy, $army, $gen)
     $ogen = implode("-", $ogen);
     $query = "update towns set army='" . implode("-", $army) . "', general='" . $ogen . "', upkeep=" . array_sum($army) . " where id=" . $town[0];
     $result = mysqli_query($db_id, $query);
-    if (!$result) msg("Failed." . mysqli_error());
+    if (!$result) msg("Failed." . mysqli_error($db_id));
 }
 
 function pass($id, $pass)
@@ -2248,7 +2247,7 @@ function pass($id, $pass)
     $query = "update users set pass='" . $pass . "' where id=" . $id;
     $result = mysqli_query($db_id, $query);
     if ($result) msg("Succes. Password changed.");
-    else msg("Failure." . mysqli_error());
+    else msg("Failure." . mysqli_error($db_id));
 }
 
 function ban($name, $value)
@@ -2260,7 +2259,7 @@ function ban($name, $value)
     if ($result)
         if ($value) msg("Succes. User '" . $name . "' level changed.");
         else msg("Succes. User '" . $name . "' level changed.");
-    else msg("Failure." . mysqli_error());
+    else msg("Failure." . mysqli_error($db_id));
 }
 
 function ch_capital($name, $usr_id)
@@ -2279,7 +2278,7 @@ function ch_capital($name, $usr_id)
             $query = "update towns set isCapital=1 where id=" . $town[0];
             $result = mysqli_query($db_id, $query);
             if ($result) msg("Succes. The town '" . $town[2] . "' is now your capital.");
-            else msg("Failed." . mysqli_error());
+            else msg("Failed." . mysqli_error($db_id));
         } else msg("Did not succeed.");
     else msg("You are not the owner of this town.");
 }
@@ -2301,7 +2300,7 @@ function profile($id, $email, $desc, $sitter, $grpath, $lang)
     $query = "update users set email='" . $email . "', description='" . $desc . "', sitter='" . $sitter . "', grPath='" . $grpath . "', lang='" . $lang . "' where id=" . $id;
     $result = mysqli_query($db_id, $query);
     if ($result) msg("Succes. Profile changed.");
-    else msg("Failure." . mysqli_error());
+    else msg("Failure." . mysqli_error($db_id));
 }
 
 function reg($name, $pass, $email, $faction)
@@ -2311,7 +2310,7 @@ function reg($name, $pass, $email, $faction)
     $query = "insert into users(name, pass, email, level, joined, lastVisit, points, ip, grPath, faction) values('" . $name . "', '" . $pass . "', '" . $email . "', 1, now(), now(), 0, '" . $_SERVER["REMOTE_ADDR"] . "', 'default/', " . $faction . ")";
     $result = mysqli_query($db_id, $query);
     if ($result) msg("Succes. You are now registered as '" . $name . "'. You can now login and create your town.");
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function a_create($name, $founder)
@@ -2332,7 +2331,7 @@ function a_create($name, $founder)
         $query = "update users set alliance=" . $row[0] . ", rank='founder' where id=" . $founder;
         $result = mysqli_query($db_id, $query);
         if ($result) return $row[0];
-        else msg("Failed." . mysqli_error());
+        else msg("Failed." . mysqli_error($db_id));
     }
 }
 
@@ -2440,7 +2439,7 @@ function o_accept($id, $seller, $sType, $sSubType, $bType, $bSubType, $res, $due
     $query = "update towns set " . $bcol . "='" . $res . "' where id=" . $id;
     $result = mysqli_query($db_id, $query);
     if ($result) header("Location: marketplace.php?town=" . $id);
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 
 function create($owner, $name, $x, $y, $is_cap)
@@ -2493,7 +2492,7 @@ function create($owner, $name, $x, $y, $is_cap)
             mysqli_query($db_id, $query);
         }
         if ($result) msg("Succes. You town has been created. Read the beginner's guide found in the help section.");
-        else msg("Failed." . mysqli_error());
+        else msg("Failed." . mysqli_error($db_id));
     }
 }
 
@@ -2524,7 +2523,7 @@ function install($name, $pass, $email, $faction)
     }
     fclose($handle);
     if ($ok) msg(" Succes. Map data added.");
-    else msg("Failed." . mysqli_error());
+    else msg("Failed." . mysqli_error($db_id));
 }
 //chat functions
 function send_chat($se, $sid, $msg, $re)
