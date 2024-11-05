@@ -4,7 +4,7 @@ if (isset($_SESSION["user"][0])) include "./language/".$_SESSION["user"][16];
 else if (isset($_SESSION["lang"])) include "./language/".$_SESSION["lang"];
 else include "./language/en.php";
 $title=$lang['title']; $announcement=$lang['announc']; $m=49; $n=49;
-$db_host="localhost"; $db_user="root"; $db_pass=""; $db_name="devana";
+include_once "db.php";
 $top_ad="<table><tr><td> <font class='q_label'>left ads</font> </td><td>";
 $bottom_ad="</td><td> <font class='q_label'>right ads</font> </td></tr></table>";
 $bottom_text="<font face='Fixedsys' color='orange'>Devana created by Busuioc Andrei.</font> Online at <a class='q_link' href='http://devana.eu'>devana.eu</a></br>";
