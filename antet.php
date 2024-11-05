@@ -1,14 +1,19 @@
 <?php
 session_start();
+print"User: 0 ";
+print_r($_SESSION["user"][0]);
+
+print_r($_SESSION["lang"]);
+print_r($_SERVER['HTTP_USER_AGENT']);
 if (isset($_SESSION["user"][0])) include "./language/".$_SESSION["user"][16];
-else if (isset($_SESSION["lang"])) include "./language/".$_SESSION["lang"];
+else if (isset($_SESSION["lang"])) include "./language/".$_SESSION["lang"].".php";
 else include "./language/en.php";
 $title=$lang['title']; $announcement=$lang['announc']; $m=49; $n=49;
 include_once "db.php";
 $top_ad="<table><tr><td> <font class='q_label'>left ads</font> </td><td>";
 $bottom_ad="</td><td> <font class='q_label'>right ads</font> </td></tr></table>";
-$bottom_text="<font face='Fixedsys' color='orange'>Devana created by Busuioc Andrei.</font> Online at <a class='q_link' href='http://devana.eu'>devana.eu</a></br>";
-if (isset($_SESSION["user"][0])&&($_SESSION["user"][4]>1)) {$top_ad=""; $bottom_ad=""; $bottom_text="<font face='Fixedsys' color='orange'>Devana created by Busuioc Andrei.</font> Online at <a class='q_link' href='http://devana.eu'>devana.eu</a></br>";}
+$bottom_text="<font face='Fixedsys' color='orange'>Devana created by Busuioc Andrei.</font> Online at <a class='q_link' href='https://linuxassistant.com/devana'>linuxassistant.com</a></br>";
+if (isset($_SESSION["user"][0])&&($_SESSION["user"][4]>1)) {$top_ad=""; $bottom_ad=""; $bottom_text="<font face='Fixedsys' color='orange'>Devana created by Busuioc Andrei.</font> Online at <a class='q_link' href='https://linuxassistant.com/devana'>devana</a></br>";}
 function logo($title)
 {
  //echo "<embed type='application/x-shockwave-flash' width='640' height='136' src='default/logo.swf' quality='high'></embed>";
@@ -50,7 +55,10 @@ function menu_down()
 }
 
 function about()
-{global $bottom_text; echo $bottom_text;}
+{
+	global $bottom_text;
+	echo $bottom_text;
+}
 
 $system=array();
 $system[0]=5;//chat message life, in minutes

@@ -1,6 +1,6 @@
 <?php
-include "antet.php";
-include "func.php";
+include_once "antet.php";
+include_once "func.php";
 
 if (isset($_SESSION["user"][1], $_POST["name"], $_GET["town"])) {
     $_GET["town"] = clean($_GET["town"]);
