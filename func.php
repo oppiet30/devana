@@ -1135,7 +1135,7 @@ function html_army($army, $f)
 
 function check_a($id)
 {
-    global $db_id, $tdif;
+    global $db_id, $tdif, $data;
 
     $query = "select timediff(dueTime" . $tdif . ", now()), town, target, type, phase, army, general, uup, wup, aup, rLoot, wLoot, intel, sent, dueTime, id from a_queue where town=" . $id . " or target=" . $id . " order by dueTime asc";
     $result = mysqli_query($db_id, $query);
