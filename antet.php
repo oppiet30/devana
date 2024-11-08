@@ -41,7 +41,8 @@ function menu_up()
 
 function menu_down()
 {
-	global $lang;
+	global $lang, $alert;
+
 	if (isset($_SESSION["user"][0], $_GET["town"])) {
 		$_GET["town"] = clean($_GET["town"]);
 		echo "<a class='q_link' href='town.php?town=" . $_GET["town"] . "'>" . $lang['townCenter'] . "</a> | <a class='q_link' href='town_stats.php?town=" . $_GET["town"] . "'>" . $lang['statistics'] . "</a> | ";
