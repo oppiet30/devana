@@ -1,6 +1,5 @@
 <?php
-$db_id = mysqli_connect($db_host, $db_user, $db_pass, $db_name)
-    or die("Could not connect to DB.");
+$db_id = mysqli_connect($db_host, $db_user, $db_pass, $db_name) or die("Could not connect to DB.");
 //time difference; gets for how much the mysql server time is ahead, compared to the http server time;
 $query = "SELECT timediff(now(), '" . date("Y-m-d H:i:s") . "')";
 $result = mysqli_query($db_id, $query);
