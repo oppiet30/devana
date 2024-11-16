@@ -33,7 +33,9 @@ function label($msg)
 function clean($str)
 {
     global $db_id;
+    
     if (is_numeric($str)) $str = floor($str);
+    
     $cleaned = strip_tags($str);
     $cleaned = htmlspecialchars($cleaned);
     $cleaned = mysqli_real_escape_string($db_id, $cleaned);
