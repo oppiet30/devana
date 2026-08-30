@@ -34,7 +34,7 @@ function menu_up()
 	if (!isset($_SESSION["user"][1])) echo "<a class='q_link' href='login.php'>" . $lang['login'] . "</a> | 
 <a class='q_link' href='register.php'>" . $lang['register'] . "</a> | ";
 	else echo "<a class='q_link' href='logout.php'>" . $lang['logout'] . "</a> | ";
-	echo $map_lnk . " | <a class='q_link' href='/forum' target='blank'>" . $lang['forum'] . "</a> | 
+	echo $map_lnk . " | <a class='q_link' href='forums.php' target='blank'>" . $lang['forum'] . "</a> | 
 <a class='q_link' href='help.php'>" . $lang['about'] . "</a> || ";
 	if (isset($_SESSION["user"][1])) echo "<a class='q_link' href='profile_view.php?id=" . $_SESSION["user"][0] . "'>" . $lang['profile'] . "</a> | <a class='q_link' href='towns.php'>" . $lang['towns'] . "</a> | ";
 }
