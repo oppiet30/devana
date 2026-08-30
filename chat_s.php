@@ -6,7 +6,7 @@ $chat_s=chat_s();
 <script type="text/javascript">
 function dat()
 {
- data=new Array(<?php for ($i=0; $i<count($chat_s)-1; $i++) echo "'".$chat_s[$i][1]."', "; echo "'".$chat_s[count($chat_s)-1][1]."'"; ?>);
+ data=new Array(<?php if (count($chat_s)) { for ($i=0; $i<count($chat_s)-1; $i++) echo "'".$chat_s[$i][1]."', "; echo "'".$chat_s[count($chat_s)-1][1]."'"; } ?>);
  document.getElementById("rn").value=data[document.getElementById("room").selectedIndex];
  document.getElementById("ri").value=document.getElementById("room").value;
 }
@@ -33,7 +33,7 @@ function dat()
 	  room <select class="dropdown" id="room" onChange="dat();">
 	  <?php for ($i=0; $i<count($chat_s); $i++) echo "<option value='".$chat_s[$i][0]."'>".$chat_s[$i][1]."</option>"; ?>
 	  </select>
-	  id <input class="textbox" type="text" id="ri" name="ri" size="3" value="<?php echo $chat_s[0][0]; ?>"> name <input type="text" id="rn" name="rn" value="<?php echo $chat_s[0][1]; ?>"></br>
+	  id <input class="textbox" type="text" id="ri" name="ri" size="3" value="<?php echo isset($chat_s[0]) ? $chat_s[0][0] : ""; ?>"> name <input type="text" id="rn" name="rn" value="<?php echo isset($chat_s[0]) ? $chat_s[0][1] : ""; ?>"></br>
 	  action <select class="dropdown" name="a"><option value="1">add</option><option value="2">edit</option><option value="3">remove</option></select></br>
 	  password <input class="textbox" type="password" name="pass">
 	  <input class="button" type="submit" value="go">
