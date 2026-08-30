@@ -153,7 +153,7 @@ function user($id)
             $row[9] = stripslashes($row[9]);
         }
         return $row;
-    } else return 0;
+    } else return null;
 }
 
 function users()
@@ -185,7 +185,7 @@ function user_($name)
             $row[9] = stripslashes($row[9]);
         }
         return $row;
-    } else return 0;
+    } else return null;
 }
 
 function config()
@@ -453,7 +453,7 @@ function town($id)
             $row[14] = stripslashes($row[14]);
         }
         return $row;
-    } else return 0;
+    } else return null;
 }
 
 function town_($name)
@@ -470,7 +470,7 @@ function town_($name)
             $row[14] = stripslashes($row[14]);
         }
         return $row;
-    } else return 0;
+    } else return null;
 }
 
 function town_xy($id)
@@ -744,7 +744,7 @@ function check_d($id)
 
     $query = "select timediff(dueTime, now()) from d_queue where user=" . $id;
     $result = mysqli_query($db_id, $query);
-    $row = mysqli_fetch_row($result);
+    $row = $result ? mysqli_fetch_row($result) : null;
     if ($row && $row[0][0])
         if ($row[0][0] == "-") {
             $query = "update map set type=1, subtype=6 where subtype in (select id from towns where owner=" . $id . ")";
@@ -832,7 +832,7 @@ function check_r($id)
 
     $query = "select production, resources, limits, timediff(now(), lastCheck), morale, upkeep, population from towns where id=" . $id;
     $result = mysqli_query($db_id, $query);
-    $row = mysqli_fetch_row($result);
+    $row = $result ? mysqli_fetch_row($result) : null;
     if (!$row) return;
     $time = explode(":", $row[3]);
     $time = $time[0] + $time[1] / 60 + $time[2] / 3600;
@@ -1152,7 +1152,7 @@ function check_a($id)
 
     $query = "select timediff(dueTime" . $tdif . ", now()), town, target, type, phase, army, general, uup, wup, aup, rLoot, wLoot, intel, sent, dueTime, id from a_queue where town=" . $id . " or target=" . $id . " order by dueTime asc";
     $result = mysqli_query($db_id, $query);
-    for (; $line = mysqli_fetch_row($result);)
+    for (; $result && ($line = mysqli_fetch_row($result));)
         if ($line[0][0] == "-") {
             $town = town($line[1]);
             $lim = explode("-", $town[11]);
@@ -1341,7 +1341,7 @@ function check_t($id)
     $query = "select timediff(dueTime" . $tdif . ", now()), seller, buyer, sType, sSubType, sQ, bType, bSubType, bQ from t_queue where type=1 and (seller=" . $id . " or buyer=" . $id . ") order by dueTime asc";
     $result = mysqli_query($db_id, $query);
 
-    for (; $offer = mysqli_fetch_row($result);)
+    for (; $result && ($offer = mysqli_fetch_row($result));)
         if ($offer[0][0] == "-") {
             $seller = town($offer[1]);
             $buyer = town($offer[2]);
@@ -1393,7 +1393,7 @@ function get_d($id)
 
     $query = "select timediff(dueTime, now()) from d_queue where user=" . $id;
     $result = mysqli_query($db_id, $query);
-    $row = mysqli_fetch_row($result);
+    $row = $result ? mysqli_fetch_row($result) : null;
     return $row ? $row[0] : null;
 }
 
@@ -1404,7 +1404,7 @@ function get_con($id)
     $query = "select b from c_queue where town=" . $id;
     $result = mysqli_query($db_id, $query);
     $b = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $b[$row[0]] = 1;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $b[$row[0]] = 1;
     return $b;
 }
 
@@ -1415,7 +1415,7 @@ function get_wea($id)
     $query = "select type from w_queue where town=" . $id;
     $result = mysqli_query($db_id, $query);
     $w = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $w[$row[0]] = 1;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $w[$row[0]] = 1;
     return $w;
 }
 
@@ -1426,7 +1426,7 @@ function get_uup($id)
     $query = "select unit from uup_queue where town=" . $id;
     $result = mysqli_query($db_id, $query);
     $u = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $u[$row[0]] = 1;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $u[$row[0]] = 1;
     return $u;
 }
 
@@ -1437,7 +1437,7 @@ function get_uns($id)
     $query = "select type from u_queue where town=" . $id;
     $result = mysqli_query($db_id, $query);
     $u = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $u[$row[0]] = 1;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $u[$row[0]] = 1;
     return $u;
 }
 
@@ -1448,12 +1448,12 @@ function get_tr($id)
     $merchants = 0;
     $query = "select sType, sQ from t_queue where seller=" . $id;
     $result = mysqli_query($db_id, $query);
-    for (; $row = mysqli_fetch_row($result);)
+    for (; $result && ($row = mysqli_fetch_row($result));)
         if ($row[0]) $merchants += ceil($row[1] / 50);
         else $merchants += ceil($row[1] / 500);
     $query = "select bType, bQ from t_queue where buyer=" . $id;
     $result = mysqli_query($db_id, $query);
-    for (; $row = mysqli_fetch_row($result);)
+    for (; $result && ($row = mysqli_fetch_row($result));)
         if ($row[0]) $merchants += ceil($row[1] / 50);
         else $merchants += ceil($row[1] / 500);
 
@@ -1467,13 +1467,13 @@ function get_t($id)
     $tq = array();
     $query = "select sType, sSubType, sQ, bType, bSubType, bQ from t_queue where seller=" . $id . " and type=0";
     $result = mysqli_query($db_id, $query);
-    for ($i = 0; $tq[0][$i] = mysqli_fetch_row($result); $i++);
+    for ($i = 0; $result && ($tq[0][$i] = mysqli_fetch_row($result)); $i++);
     $query = "select bType, bSubType, bQ, buyer, timediff(dueTime" . $tdif . ", now()), sType, sSubType, sQ from t_queue where seller=" . $id . " and type=1";
     $result = mysqli_query($db_id, $query);
-    for ($i = 0; $tq[1][$i] = mysqli_fetch_row($result); $i++);
+    for ($i = 0; $result && ($tq[1][$i] = mysqli_fetch_row($result)); $i++);
     $query = "select sType, sSubType, sQ, seller, timediff(dueTime" . $tdif . ", now()), bType, bSubType, bQ from t_queue where buyer=" . $id . " and type=1";
     $result = mysqli_query($db_id, $query);
-    for ($i = 0; $tq[2][$i] = mysqli_fetch_row($result); $i++);
+    for ($i = 0; $result && ($tq[2][$i] = mysqli_fetch_row($result)); $i++);
 
     return $tq;
 }
@@ -1485,7 +1485,7 @@ function get_w($id)
     $query = "select timediff(dueTime" . $tdif . ", now()), type, quantity from w_queue where town=" . $id . " order by dueTime asc";
     $result = mysqli_query($db_id, $query);
     $wq = array();
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $wq[$i] = $row;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $wq[$i] = $row;
     return $wq;
 }
 
@@ -1496,7 +1496,7 @@ function get_u($id)
     $query = "select timediff(dueTime" . $tdif . ", now()), type, quantity from u_queue where town=" . $id . " order by dueTime asc";
     $result = mysqli_query($db_id, $query);
     $uq = array();
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $uq[$i] = $row;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $uq[$i] = $row;
     return $uq;
 }
 
@@ -1507,7 +1507,7 @@ function get_a($id)
     $query = "select timediff(dueTime" . $tdif . ", now()), target, type, army, general, id from a_queue where town=" . $id . " and phase=0 order by dueTime asc";
     $result = mysqli_query($db_id, $query);
     $aq = array();
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $aq[$i] = $row;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $aq[$i] = $row;
     return $aq;
 }
 
@@ -1518,7 +1518,7 @@ function get_ia($id)
     $query = "select timediff(dueTime" . $tdif . ", now()), town, target, type, phase from a_queue where (target=" . $id . " and phase=0) or (town=" . $id . " and phase=1) order by dueTime asc";
     $result = mysqli_query($db_id, $query);
     $iaq = array();
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $iaq[$i] = $row;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $iaq[$i] = $row;
     return $iaq;
 }
 
@@ -1529,7 +1529,7 @@ function get_up($id)
     $query = "select timediff(dueTime" . $tdif . ", now()), unit, tree from uup_queue where town=" . $id . " order by dueTime asc";
     $result = mysqli_query($db_id, $query);
     $upq = array();
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $upq[$i] = $row;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $upq[$i] = $row;
     return $upq;
 }
 
@@ -1540,7 +1540,7 @@ function get_c($id)
     $query = "select timediff(dueTime" . $tdif . ", now()), b, subB from c_queue where town=" . $id . " order by dueTime asc";
     $result = mysqli_query($db_id, $query);
     $cq = array();
-    for ($i = 0; $row = mysqli_fetch_row($result); $i++) $cq[$i] = $row;
+    for ($i = 0; $result && ($row = mysqli_fetch_row($result)); $i++) $cq[$i] = $row;
     return $cq;
 }
 
@@ -1550,7 +1550,7 @@ function get_pact($a1, $a2)
 
     $query = "select type from pacts where (a1=" . $a1 . " and a2=" . $a2 . ") or (a1=" . $a2 . " and a2=" . $a1 . ")";
     $result = mysqli_query($db_id, $query);
-    $row = mysqli_fetch_row($result);
+    $row = $result ? mysqli_fetch_row($result) : null;
     return $row ? $row[0] : null;
 }
 
