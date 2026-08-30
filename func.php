@@ -1,4 +1,5 @@
 <?php
+mysqli_report(MYSQLI_REPORT_OFF);
 $db_id = mysqli_connect($db_host, $db_user, $db_pass, $db_name) or die("Could not connect to DB.");
 //time difference; gets for how much the mysql server time is ahead, compared to the http server time;
 $query = "SELECT timediff(now(), '" . date("Y-m-d H:i:s") . "')";
@@ -147,8 +148,10 @@ function user($id)
     $result = mysqli_query($db_id, $query);
     if ($result) {
         $row = mysqli_fetch_row($result);
-        $row[1] = stripslashes($row[1]);
-        $row[9] = stripslashes($row[9]);
+        if ($row) {
+            $row[1] = stripslashes($row[1]);
+            $row[9] = stripslashes($row[9]);
+        }
         return $row;
     } else return 0;
 }
@@ -162,7 +165,7 @@ function users()
     $users = array();
     for ($i = 0; $row = mysqli_fetch_row($result); $i++) {
         $users[$i] = $row;
-        $users[$i][1] = stripslashes($users[$i][9]);
+        $users[$i][1] = stripslashes($users[$i][1]);
         $users[$i][9] = stripslashes($users[$i][9]);
     }
     return $users;
@@ -292,7 +295,7 @@ function forum($a, $id, $alliance, $parent, $name, $desc)
             $query = "select parent from forums where id=" . $parent;
             $result = mysqli_query($db_id, $query);
             $row = mysqli_fetch_row($result);
-            if ($row[0]) $forums[1] = $row[0];
+            if ($row && $row[0]) $forums[1] = $row[0];
             else $forums[1] = 0;
             return $forums;
             break;
@@ -736,14 +739,14 @@ function check_d($id)
     $query = "select timediff(dueTime, now()) from d_queue where user=" . $id;
     $result = mysqli_query($db_id, $query);
     $row = mysqli_fetch_row($result);
-    if ($row[0][0])
+    if ($row && $row[0][0])
         if ($row[0][0] == "-") {
             $query = "update map set type=1, subtype=6 where subtype in (select id from towns where owner=" . $id . ")";
             mysqli_query($db_id, $query);
             $query = "select id from alliances where founder=" . $id;
             $result = mysqli_query($db_id, $query);
             $row = mysqli_fetch_row($result);
-            if ($row[0]) //if the user is an alliance founder
+            if ($row && $row[0]) //if the user is an alliance founder
             {
                 $query = "delete from alliances where id=" . $row[0];
                 mysqli_query($db_id, $query);
@@ -786,7 +789,7 @@ function del_u($id)
     $query = "select id from alliances where founder=" . $id;
     $result = mysqli_query($db_id, $query);
     $row = mysqli_fetch_row($result);
-    if ($row[0]) //if the user is an alliance founder
+    if ($row && $row[0]) //if the user is an alliance founder
     {
         $query = "delete from alliances where id=" . $row[0];
         mysqli_query($db_id, $query);
@@ -1380,7 +1383,7 @@ function get_d($id)
     $query = "select timediff(dueTime, now()) from d_queue where user=" . $id;
     $result = mysqli_query($db_id, $query);
     $row = mysqli_fetch_row($result);
-    return $row[0];
+    return $row ? $row[0] : null;
 }
 
 function get_con($id)
@@ -1537,7 +1540,7 @@ function get_pact($a1, $a2)
     $query = "select type from pacts where (a1=" . $a1 . " and a2=" . $a2 . ") or (a1=" . $a2 . " and a2=" . $a1 . ")";
     $result = mysqli_query($db_id, $query);
     $row = mysqli_fetch_row($result);
-    return $row[0];
+    return $row ? $row[0] : null;
 }
 
 function cancel_d($id)

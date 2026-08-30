@@ -48,6 +48,7 @@ function menu_down()
 		echo "<a class='q_link' href='town.php?town=" . $_GET["town"] . "'>" . $lang['townCenter'] . "</a> | <a class='q_link' href='town_stats.php?town=" . $_GET["town"] . "'>" . $lang['statistics'] . "</a> | ";
 	}
 	if (isset($_SESSION["user"][0])) $alert = msg_rep_alert($_SESSION["user"][0]);
+	else $alert = array(array(0), array(0));
 	if ($alert[0][0]) $alert[0] = "<font color='red'>" . $alert[0][0] . "</font> ";
 	else $alert[0] = "";
 	if ($alert[1][0]) $alert[1] = "<font color='red'>" . $alert[1][0] . "</font> ";

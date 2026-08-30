@@ -8,6 +8,7 @@ if (isset($_GET["id"])) {
 	check_d($_GET["id"]);
 	$del = get_d($_GET["id"]);
 	$usr = user($_GET["id"]);
+	if (!$usr) { header('Location: index.php'); die(); }
 	if (isset($usr[10])) $faction = faction($usr[10]);
 	else $faction = array(0, 0, 0, 0);
 	$towns = towns($_GET["id"]);

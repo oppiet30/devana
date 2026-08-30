@@ -4,13 +4,13 @@ if (isset($_POST["name"], $_POST["pass"]))
  $_POST["name"]=clean($_POST["name"]); $_POST["pass"]=clean($_POST["pass"]);
  $_SESSION["user"]=login($_POST["name"], md5($_POST["pass"]));
  $config=config();
- if ((!$config[2][1])&&($_SESSION["user"][4]<4))
+ if ((!$config[2][1])&&($_SESSION["user"])&&($_SESSION["user"][4]<4))
  {
   $_SESSION = array();
   session_destroy();
   msg($lang['loginClosed']);
  }
- else if ($_SESSION["user"][0])
+ else if (($_SESSION["user"])&&($_SESSION["user"][0]))
   {
    if (check_d($_SESSION["user"][0]))
    {
