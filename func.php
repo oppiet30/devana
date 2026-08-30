@@ -180,8 +180,10 @@ function user_($name)
 
     if ($result) {
         $row = mysqli_fetch_row($result);
-        $row[1] = stripslashes($row[1]);
-        $row[9] = stripslashes($row[9]);
+        if ($row) {
+            $row[1] = stripslashes($row[1]);
+            $row[9] = stripslashes($row[9]);
+        }
         return $row;
     } else return 0;
 }
@@ -225,7 +227,7 @@ function alliance_all($id)
     $result = mysqli_query($db_id, $query);
     $alliance = array();
     $alliance[0] = mysqli_fetch_row($result);
-    if (!$alliance[0][0]) {
+    if (!$alliance[0] || !$alliance[0][0]) {
         return 0;
     }
     $query = "select * from users where alliance=" . $alliance[0][0];
@@ -446,8 +448,10 @@ function town($id)
     $result = mysqli_query($db_id, $query);
     if ($result) {
         $row = mysqli_fetch_row($result);
-        $row[2] = stripslashes($row[2]);
-        $row[14] = stripslashes($row[14]);
+        if ($row) {
+            $row[2] = stripslashes($row[2]);
+            $row[14] = stripslashes($row[14]);
+        }
         return $row;
     } else return 0;
 }
@@ -461,8 +465,10 @@ function town_($name)
 
     if ($result) {
         $row = mysqli_fetch_row($result);
-        $row[2] = stripslashes($row[2]);
-        $row[14] = stripslashes($row[14]);
+        if ($row) {
+            $row[2] = stripslashes($row[2]);
+            $row[14] = stripslashes($row[14]);
+        }
         return $row;
     } else return 0;
 }
@@ -827,6 +833,7 @@ function check_r($id)
     $query = "select production, resources, limits, timediff(now(), lastCheck), morale, upkeep, population from towns where id=" . $id;
     $result = mysqli_query($db_id, $query);
     $row = mysqli_fetch_row($result);
+    if (!$row) return;
     $time = explode(":", $row[3]);
     $time = $time[0] + $time[1] / 60 + $time[2] / 3600;
     $res = explode("-", $row[1]);
@@ -854,6 +861,7 @@ function check_c($id, $faction)
 {
     global $db_id, $tdif;
     $town = town($id);
+    if (!$town) return;
     $buildings = buildings($faction);
     $data = explode("-", $town[8]);
     $res = explode("-", $town[10]);
@@ -1085,6 +1093,7 @@ function check_w($id)
 {
     global $db_id, $tdif;
     $town = town($id);
+    if (!$town) return;
     $data = explode("-", $town[6]);
 
     $query = "select timediff(dueTime" . $tdif . ", now()), type, quantity from w_queue where town=" . $id . " order by dueTime asc";
@@ -1284,6 +1293,7 @@ function check_u($id)
 {
     global $db_id, $tdif;
     $town = town($id);
+    if (!$town) return;
     $data = explode("-", $town[7]);
 
     $query = "select timediff(dueTime" . $tdif . ", now()), type, quantity from u_queue where town=" . $id . " order by dueTime asc";
@@ -1303,6 +1313,7 @@ function check_uup($id)
 {
     global $db_id, $tdif;
     $town = town($id);
+    if (!$town) return;
     $data[17] = explode("-", $town[17]);
     $data[18] = explode("-", $town[18]);
     $data[19] = explode("-", $town[19]);
@@ -1631,7 +1642,7 @@ function cancel_t($id, $sType, $sSubType, $bType, $bSubType, $res)
 {
     global $db_id;
     $town = town($id);
-    $data = explode("-", $town[6]);
+    if ($town) $data = explode("-", $town[6]);
 
     if ($sType) $scol = "weapons";
     else $scol = "resources";
@@ -1766,7 +1777,7 @@ function delrep($id, $owner)
     global $db_id, $lang;
     $report = report($id);
 
-    if ($owner != $report[1]) {
+    if (!$report || $owner != $report[1]) {
         msg($lang['accessDenied']);
     } else {
         $query = "delete from reports where id=" . $id;
@@ -1793,7 +1804,7 @@ function delmsg($id, $owner)
     global $db_id, $lang;
     $message = message($id);
 
-    if ($owner != $message[2]) {
+    if (!$message || $owner != $message[2]) {
         msg($lang['accessDenied']);
     } else {
         $query = "delete from messages where id=" . $id;
@@ -2272,7 +2283,7 @@ function ch_capital($name, $usr_id)
 
     $usr = user($usr_id);
     $town = town_($name);
-    if ($town[1] == $usr_id)
+    if ($town && $town[1] == $usr_id)
         if ($town[0]) {
             $query = "select id from towns where isCapital=1 and owner=" . $usr[0];
             $result = mysqli_query($db_id, $query);
@@ -2384,6 +2395,7 @@ function pact($type, $name, $id)
     global $db_id;
     $a2 = alliance_($name);
     $a1 = alliance($id);
+    if (!$a1 || !$a2) return 0;
     $usr = user($a1[2]);
 
     if (!$type) {

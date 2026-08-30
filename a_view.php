@@ -4,6 +4,7 @@ if (isset($_GET["id"]))
 {
  $_GET["id"]=clean($_GET["id"]);
  $alliance=alliance_all($_GET["id"]);
+ if (!$alliance) {header('Location: index.php'); die();}
 }
 else {header('Location: login.php'); die();}
 ?>
