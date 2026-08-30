@@ -5,7 +5,7 @@ session_destroy();
 ?>
 <html>
 <?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
-<script src="func.js" type="text/javascript"></script>
+<script src="func.js?v=<?php echo filemtime("func.js"); ?>" type="text/javascript"></script>
 
 <head>
 <title><?php echo $title; ?> - <?php echo $lang['login'] ?></title>

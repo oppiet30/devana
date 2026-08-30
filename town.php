@@ -40,7 +40,7 @@ if (isset($_SESSION["user"][0], $_GET["town"])) {
 ?>
 <html>
 <?php echo "<link rel='stylesheet' type='text/css' href='" . $imgs . $fimgs . "default.css'>"; ?>
-<script src="func.js" type="text/javascript"></script>
+<script src="func.js?v=<?php echo filemtime("func.js"); ?>" type="text/javascript"></script>
 <script type="text/javascript">
 	var res_start0 = <?php echo floor($res[0]); ?>;
 	var res_start1 = <?php echo floor($res[1]); ?>;

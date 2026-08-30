@@ -28,7 +28,7 @@ else {header('Location: login.php'); die();}
       <tr>
         <td class="td_content">
 	<span id="chat_t"><?php echo $system[1]; ?></span> <?php echo $lang['chatRefresh']; ?></br>
-<script src="func.js" type="text/javascript"></script>
+<script src="func.js?v=<?php echo filemtime("func.js"); ?>" type="text/javascript"></script>
 <script type='text/javascript'>
 msg=""; sid=1;
 function keyUp(key)

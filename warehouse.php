@@ -15,7 +15,7 @@ else {header('Location: login.php'); die();}
 ?>
 <html>
 <?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
-<script src="func.js" type="text/javascript"></script>
+<script src="func.js?v=<?php echo filemtime("func.js"); ?>" type="text/javascript"></script>
 <script type="text/javascript">
 var res_start0=<?php echo floor($res[0]);?>; var res_start1=<?php echo floor($res[1]);?>; var res_start2=<?php echo floor($res[2]);?>; var res_start3=<?php echo floor($res[3]);?>; var res_start4=<?php echo floor($res[4]);?>;
 var res_limit0=<?php echo $lim[0];?>; var res_limit1=<?php echo $lim[1];?>; var res_limit2=<?php echo $lim[1];?>; var res_limit3=<?php echo $lim[1];?>; var res_limit4=<?php echo $lim[2];?>;

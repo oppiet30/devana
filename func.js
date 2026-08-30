@@ -126,7 +126,7 @@ function timer(data, lnk)
 	}
 	if (!done)
 	{
-		dat.innerHTML=time[0]+":"+time[1]+":"+time[2];
+		dat.innerHTML=time[0]+":"+(time[1]<10?"0":"")+time[1]+":"+(time[2]<10?"0":"")+time[2];
 		id[data]=setTimeout("timer('"+data+"', '"+lnk+"')", 1000);
 	}
 }

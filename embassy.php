@@ -15,7 +15,7 @@ else {header('Location: login.php'); die();}
 ?>
 <html>
 <?php echo "<link rel='stylesheet' type='text/css' href='".$imgs.$fimgs."default.css'>"; ?>
-<script src="func.js" type="text/javascript"></script>
+<script src="func.js?v=<?php echo filemtime("func.js"); ?>" type="text/javascript"></script>
 <script type="text/javascript">
 var prev="";
 var tabLinks = new Array();
