@@ -29,7 +29,7 @@ if (isset($_SESSION["user"][0], $_GET["town"], $_GET["type"], $_POST["sQ"], $_PO
 	      if ((!$_POST["maxTime"])||(($_POST["maxTime"])&&($_POST["maxTime"]>=$date)))
 	      {
 	       $date=strtotime("+".floor($date)." hours ".floor(($date-floor($date))*60)." minutes");
-        $date=strftime("%y-%m-%d %H:%M:%S", $date);
+        $date=date("y-m-d H:i:s", $date);
         $res[$_POST["sSubType"]]-=$_POST["sQ"];
         trade($_GET["town"], $buyer[0], $_POST["sQ"], $_POST["sType"], $_POST["sSubType"], 0, 0, 0, $_GET["type"], $date, implode("-", $res), $_POST["maxTime"]);
 	      } else msg($lang['durExceeds']);

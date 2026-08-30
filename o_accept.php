@@ -25,7 +25,7 @@ if (isset($_SESSION["user"][0], $_GET["town"], $_GET["send"], $_GET["seller"], $
      if ((!$offer[13])||(($offer[13])&&($offer[13]>=$date)))
 	 {
       $date=strtotime("+".floor($date)." hours ".floor(($date-floor($date))*60)." minutes");
-      $date=strftime("%y-%m-%d %H:%M:%S", $date);
+      $date=date("y-m-d H:i:s", $date);
       $res[$_GET["bSubType"]]-=$offer[7]; $res=implode("-", $res);
       o_accept($_GET["town"], $_GET["seller"], $_GET["sType"], $_GET["sSubType"], $_GET["bType"], $_GET["bSubType"], $res, $date);
 	 }

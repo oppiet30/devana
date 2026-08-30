@@ -35,7 +35,7 @@ if (isset($_SESSION["user"][1], $_POST["type"], $_POST["target"], $_GET["town"])
           $date=sqrt(pow($loc[0]-$tloc[0], 2)+pow($loc[1]-$tloc[1], 2))/$spd;
           $time[0]=floor($date); $time[1]=floor(($date-floor($date))*60); $time=implode("-", $time);
           $date=strtotime("+".floor($date)." hours ".floor(($date-floor($date))*60)." minutes");
-          $date=strftime("%y-%m-%d %H:%M:%S", $date);
+          $date=date("y-m-d H:i:s", $date);
           $gen[3]=clean($_POST["formation"]); if (!clean($_POST["general"])) $gen[0]=0;
           dispatch($town, $target, clean($_POST["type"]), $date, $time, implode("-", $qarmy), implode("-", $army), implode("-", $gen));
           header("Location: dispatch.php?town=".$_GET["town"]);

@@ -1190,7 +1190,7 @@ function check_a($id)
                         $buildings = buildings($ta_owner[10]);
                         $line[13] = explode("-", $line[13]);
                         $date = strtotime("+" . $line[13][0] . " hours " . $line[13][1] . " minutes", strtotime($line[14]));
-                        $date = strftime("%Y-%m-%d %H:%M:%S", $date);
+                        $date = date("Y-m-d H:i:s", $date);
                         //population update due to possible siege damage
                         if ($target[8] != implode("-", $data[0][3])) {
                             $target[8] = explode("-", $target[8]);
@@ -1835,7 +1835,7 @@ function delacc($id)
     $row = mysqli_fetch_row($result);
     if (!$row[0]) {
         $date = strtotime("+1 day");
-        $date = strftime("%Y-%m-%d %H:%M:%S", $date);
+        $date = date("Y-m-d H:i:s", $date);
         $query = "insert into d_queue(user, dueTime) values('" . $id . "', '" . $date . "')";
         $result = mysqli_query($db_id, $query);
         if ($result) msg("Account will be deleted in 24 hours.");
@@ -1863,7 +1863,7 @@ function build($id, $b, $subB, $time, $res, $faction)
     $row = mysqli_fetch_row($result);
     if ($row[0] != "") $date = strtotime("+" . $time[0] . " hours " . $time[1] . " minutes " . ($time[2] + rand(0, 9)) . " seconds", strtotime($row[0]));
     else $date = strtotime("+" . $time[0] . " hours " . $time[1] . " minutes " . ($time[2] + rand(0, 9)) . " seconds");
-    $date = strftime("%Y-%m-%d %H:%M:%S", $date);
+    $date = date("Y-m-d H:i:s", $date);
     $query = "insert into c_queue(town, dueTime, b, subB) values('" . $id . "', '" . $date . "', '" . $b . "', '" . $subB . "')";
     $result = mysqli_query($db_id, $query);
     $query = "update towns set resources='" . $res . "' where id=" . $id;
@@ -1890,7 +1890,7 @@ function forge($a, $id, $type, $q, $time, $res)
     $row = mysqli_fetch_row($result);
     if ($row[0] != "") $date = strtotime("+" . $time[0] . " hours " . $time[1] . " minutes " . $time[2] . " seconds", strtotime($row[0]));
     else $date = strtotime("+" . $time[0] . " hours " . $time[1] . " minutes " . $time[2] . " seconds");
-    $date = strftime("%Y-%m-%d %H:%M:%S", $date);
+    $date = date("Y-m-d H:i:s", $date);
     if (!$a) $query = "insert into w_queue(town, dueTime, type, quantity) values('" . $id . "', '" . $date . "', '" . $type . "', '" . $q . "')";
     else $query = "update w_queue set dueTime='" . $date . "', quantity=quantity+" . $q . " where town=" . $id . " and type=" . $type;
     $result = mysqli_query($db_id, $query);
@@ -1914,7 +1914,7 @@ function train($a, $id, $type, $q, $time, $res, $weaps)
     $row = mysqli_fetch_row($result);
     if ($row[0] != "") $date = strtotime("+" . $time[0] . " hours " . $time[1] . " minutes " . $time[2] . " seconds", strtotime($row[0]));
     else $date = strtotime("+" . $time[0] . " hours " . $time[1] . " minutes " . $time[2] . " seconds");
-    $date = strftime("%Y-%m-%d %H:%M:%S", $date);
+    $date = date("Y-m-d H:i:s", $date);
     if (!$a) $query = "insert into u_queue(town, dueTime, type, quantity) values('" . $id . "', '" . $date . "', '" . $type . "', '" . $q . "')";
     else $query = "update u_queue set dueTime='" . $date . "', quantity=quantity+" . $q . " where town=" . $id . " and type=" . $type;
     $result = mysqli_query($db_id, $query);
@@ -2226,7 +2226,7 @@ function upgrade_u($id, $res, $unit, $tree, $time)
     $row = mysqli_fetch_row($result);
     if ($row[0] != "") $date = strtotime("+ " . $time[0] . " hours " . $time[1] . " minutes", strtotime($row[0]));
     else $date = strtotime("+ " . $time[0] . " hours " . $time[1] . " minutes");
-    $date = strftime("%Y-%m-%d %H:%M:%S", $date);
+    $date = date("Y-m-d H:i:s", $date);
     $query = "insert into uup_queue(town, unit, tree, dueTime) values(" . $id . ", " . $unit . ", " . $tree . ", '" . $date . "')";
     mysqli_query($db_id, $query);
     $query = "update towns set resources='" . $res . "' where id=" . $id;
