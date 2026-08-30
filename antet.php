@@ -1,5 +1,6 @@
 <?php
 session_start();
+if (isset($_SESSION["user"]) && count($_SESSION["user"]) < 17) unset($_SESSION["user"]);
 if (isset($_SESSION["user"][0])) include "./language/" . $_SESSION["user"][16];
 else if (isset($_SESSION["lang"])) include "./language/" . $_SESSION["lang"];
 else include "./language/en.php";

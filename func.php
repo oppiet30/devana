@@ -226,7 +226,7 @@ function alliance_all($id)
     $query = "select * from alliances where id=" . $id;
     $result = mysqli_query($db_id, $query);
     $alliance = array();
-    $alliance[0] = mysqli_fetch_row($result);
+    $alliance[0] = $result ? mysqli_fetch_row($result) : null;
     if (!$alliance[0] || !$alliance[0][0]) {
         return 0;
     }
@@ -424,7 +424,7 @@ function faction($id)
     $query = "select * from factions where id = $id";
     $result = mysqli_query($db_id, $query);
 
-    $row = mysqli_fetch_row($result);
+    $row = $result ? mysqli_fetch_row($result) : null;
     return $row;
 }
 
